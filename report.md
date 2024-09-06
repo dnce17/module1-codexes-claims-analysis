@@ -4,7 +4,8 @@
 NOTE: horizontal lines and line breaks (\n) are sometimes printed to increase readability in terminal
 
 1. Imported pandas package to aid in analysis
-2. Loaded data with the pandas .read_csv() function by inserting a local CSV file that I downloaded from the CMS site and using the | delimiter
+2. Loaded data with the pandas .read_csv() function by inserting an inpatient CSV file that I downloaded from the CMS site and placed into the root directory; the | delimiter was also used in .read_csv().
+    * NOTE: I initially considered inserting the CSV's link address, but decided to download the file instead to avoid potential issues with broken links in the future.
 3. data.head() is printed to display the first few rows of the dataset in order to understand its structure
 4. Looped through data columns to see what column names exist
 5. Explored the dataset and chose 8 unique types of medical codexes that I put into an array titled "code_name_arr"
