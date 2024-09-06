@@ -11,12 +11,9 @@ print(data.head())
 for col in data.columns:
     print(col)
 
-# Line break
-print()
-
 code_name_arr = [
     'ICD_DGNS_CD5',
-    'ICD_DGNS_E_CD10',
+    'ADMTG_DGNS_CD',
     'ICD_PRCDR_CD4',
     'PRNCPAL_DGNS_CD',
     'ADMTG_DGNS_CD',
@@ -25,19 +22,14 @@ code_name_arr = [
     'HCPCS_CD',
 ]
 
-# def get_code_data(data_arr):
-#     for code_name in code_name_arr:
-#         data_arr.append(data[code_name])
-
-# code_data_arr = []
-# get_code_data(code_data_arr)
-
 # Step 3: Analyze the Frequency of Each Unique Value
 # Calculate the frequency of unique values in each codex column
 
 # Frequency count for all codes
 def get_frequency(code_arr):
     for i, code_name in enumerate(code_arr):
+        # Formatting purposes
+        print("-----------")
         print(f'{code_name} Frequency: {data[code_name].value_counts()}\n')
     
 get_frequency(code_name_arr)
@@ -59,24 +51,25 @@ check_missing_data(code_name_arr)
 # print(missing_code)
 # data['ADMTG_DGNS_CD'].sample(100)
 
-# Example of handling missing data by filling with a placeholder
+# Handling missing data by filling with a placeholder
 def handle_missing_data(code_arr):
-    # for i, code_data in enumerate(code_arr):
-    #     code_data.fillna('MISSING', inplace=True)
-    #     print(code_data_arr[i])
-    #     print("\n")
-
     for i, code_name in enumerate(code_arr):
+        print("-----------")
         data[code_name].fillna('MISSING', inplace=True)
         print(f'{data[code_name]}\n')
 
 
 handle_missing_data(code_name_arr)
 
-# # Step 5: Summary of Findings
-# # Provide a summary of the most common codes
-# # Here we'll just print the top 5 most common codes for each category
-# print('Top 5 Most Common ICD Codes:\n', icd_dgns_cd5_frequency.head())
+# Step 5: Summary of Findings
+# Provide a summary of the most common codes
+# Here we'll just print the top 5 most common codes for each category
+def get_common_codes(code_arr):
+    for i, code_name in enumerate(code_arr):
+        print("-----------")
+        print(f'Top 5 Most Common {code_name}: {data[code_name].value_counts().head()}\n')
+
+get_common_codes(code_name_arr)
 
 # # Additional Analysis Example
 # # Are there any patterns? For instance, let's see if certain DRG codes are more common
@@ -84,3 +77,17 @@ handle_missing_data(code_name_arr)
 # diabetes_related = data[icd_dgns_cd5.str.contains('E11', na=False)]
 # common_drg_for_diabetes = diabetes_related['DRG_CODE'].value_counts()
 # print('Most Common DRG Codes for Patients with ICD Code E11 (Type 2 Diabetes):\n', common_drg_for_diabetes)
+
+# N1830 --> chronic kidney disease
+
+icd_dgns_cd5 = data['ICD_DGNS_CD5']
+kidney_related = data[icd_dgns_cd5.str.contains('N1830', na=False)]
+common_drg_for_kidney = kidney_related['PRNCPAL_DGNS_CD'].value_counts()
+print("-----------")
+print(f'Most Common Claim Principal Diagnosis Code for Patients with ICD Code N1830 (Chronic Kidney Disease): {common_drg_for_kidney}\n')
+
+
+heart_related = data[icd_dgns_cd5.str.contains('I259', na=False)]
+common_drg_for_heart = heart_related['PRNCPAL_DGNS_CD'].value_counts()
+print("-----------")
+print(f'Most Common Claim Principal Diagnosis Code for Patients with ICD Code I259 (Chronic Ischemic Heart Disease): {common_drg_for_heart}\n')
