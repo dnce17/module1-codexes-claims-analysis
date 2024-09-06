@@ -11,58 +11,76 @@ print(data.head())
 for col in data.columns:
     print(col)
 
-icd_dgns_cd5 = data['ICD_DGNS_CD5']
-icd_dgns_e_cd10 = data['ICD_DGNS_E_CD10']
-icd_prcdr_cd4 = data['ICD_PRCDR_CD4']
-prncpal_dgns_cd = data['PRNCPAL_DGNS_CD']
-admtg_dgns_cd = data['ADMTG_DGNS_CD']
-clm_drg_cd = data['CLM_DRG_CD']
-clm_drg_outlier_stay_cd = data['CLM_DRG_OUTLIER_STAY_CD']
-hcpcs_cd = data['HCPCS_CD']
+# Line break
+print()
+
+code_name_arr = [
+    'ICD_DGNS_CD5',
+    'ICD_DGNS_E_CD10',
+    'ICD_PRCDR_CD4',
+    'PRNCPAL_DGNS_CD',
+    'ADMTG_DGNS_CD',
+    'CLM_DRG_CD',
+    'CLM_DRG_OUTLIER_STAY_CD',
+    'HCPCS_CD',
+]
+
+# def get_code_data(data_arr):
+#     for code_name in code_name_arr:
+#         data_arr.append(data[code_name])
+
+# code_data_arr = []
+# get_code_data(code_data_arr)
 
 # Step 3: Analyze the Frequency of Each Unique Value
 # Calculate the frequency of unique values in each codex column
 
-# Frequency count for ICD codes
-icd_dgns_cd5_frequency = icd_dgns_cd5.value_counts()
-print("ICD_DGNS_CD5 Frequency:\n", icd_dgns_cd5_frequency)
-
-icd_dgns_e_cd10_frequency = icd_dgns_e_cd10.value_counts()
-print("ICD_DGNS_E_CD10 Frequency:\n", icd_dgns_e_cd10)
-
-icd_prcdr_cd4_frequency = icd_prcdr_cd4.value_counts()
-print("ICD_PRCDR_CD4 Frequency:\n", icd_prcdr_cd4)
-
-# Frequency count for DRG codes
-drg_frequency = drg_codes.value_counts()
-print("DRG Codes Frequency:\n", drg_frequency)
-
-# Frequency count for HCPCS codes
-# hcpcs_frequency = hcpcs_codes.value_counts()
-# print("HCPCS Codes Frequency:\n", hcpcs_frequency)
+# Frequency count for all codes
+def get_frequency(code_arr):
+    for i, code_name in enumerate(code_arr):
+        print(f'{code_name} Frequency: {data[code_name].value_counts()}\n')
+    
+get_frequency(code_name_arr)
 
 # Step 4: Handle Missing Data (if any)
 # Check for missing values in codex-related columns
-missing_icd_dgns_cd5 = icd_dgns_cd5.isnull().sum()
+def check_missing_data(code_arr):
+    for i, code_name in enumerate(code_arr):
+        print(f'Missing {code_name}: {data[code_name].isnull().sum()}')
+
+        if i == len(code_arr) - 1:
+            print("\n")
+    
+check_missing_data(code_name_arr)
 
 
-print(f"Missing ICD Codes: {missing_icd_dgns_cd5}")
-print(f"Missing DRG Codes: {missing_drg}")
-print(f"Missing HCPCS Codes: {missing_hcpcs}")
+# TEST USE: to see if function works
+# missing_code = data['ADMTG_DGNS_CD'].isnull().sum()
+# print(missing_code)
+# data['ADMTG_DGNS_CD'].sample(100)
 
 # Example of handling missing data by filling with a placeholder
-icd_dgns_cd5.fillna('MISSING', inplace=True)
-data['DRG_CODE'].fillna('MISSING', inplace=True)
-data['HCPCS_CODE'].fillna('MISSING', inplace=True)
+def handle_missing_data(code_arr):
+    # for i, code_data in enumerate(code_arr):
+    #     code_data.fillna('MISSING', inplace=True)
+    #     print(code_data_arr[i])
+    #     print("\n")
 
-# Step 5: Summary of Findings
-# Provide a summary of the most common codes
-# Here we'll just print the top 5 most common codes for each category
-print("Top 5 Most Common ICD Codes:\n", icd_dgns_cd5_frequency.head())
+    for i, code_name in enumerate(code_arr):
+        data[code_name].fillna('MISSING', inplace=True)
+        print(f'{data[code_name]}\n')
 
-# Additional Analysis Example
-# Are there any patterns? For instance, let's see if certain DRG codes are more common
-# when ICD codes are specific values (e.g., 'E11' for Type 2 Diabetes)
-diabetes_related = data[icd_dgns_cd5.str.contains('E11', na=False)]
-common_drg_for_diabetes = diabetes_related['DRG_CODE'].value_counts()
-print("Most Common DRG Codes for Patients with ICD Code E11 (Type 2 Diabetes):\n", common_drg_for_diabetes)
+
+handle_missing_data(code_name_arr)
+
+# # Step 5: Summary of Findings
+# # Provide a summary of the most common codes
+# # Here we'll just print the top 5 most common codes for each category
+# print('Top 5 Most Common ICD Codes:\n', icd_dgns_cd5_frequency.head())
+
+# # Additional Analysis Example
+# # Are there any patterns? For instance, let's see if certain DRG codes are more common
+# # when ICD codes are specific values (e.g., 'E11' for Type 2 Diabetes)
+# diabetes_related = data[icd_dgns_cd5.str.contains('E11', na=False)]
+# common_drg_for_diabetes = diabetes_related['DRG_CODE'].value_counts()
+# print('Most Common DRG Codes for Patients with ICD Code E11 (Type 2 Diabetes):\n', common_drg_for_diabetes)
